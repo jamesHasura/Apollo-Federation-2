@@ -16,7 +16,14 @@ const reviews = [
   {
     id: '2',
     productId: '1',
-    content: 'The best best blender',
+    content: 'The best blender ever',
+    rating: 5.0,
+    userId: 2,
+  },
+  {
+    id: '3',
+    productId: '2',
+    content: 'The best coffee maker in the world',
     rating: 5.0,
     userId: 2,
   },

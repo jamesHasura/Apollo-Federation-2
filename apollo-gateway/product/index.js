@@ -12,7 +12,13 @@ const products = [
     description: null,
     price: 40,
     categoryId: '2',
-    userId: 1,
+  },
+  {
+    id: '2',
+    title: 'Coffee Maker',
+    description: null,
+    price: 1000,
+    categoryId: '2',
   },
 ];
 
