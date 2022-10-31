@@ -14,6 +14,14 @@ const products = [
     categoryId: '2',
     userId: 1,
   },
+  {
+    id: '2',
+    title: 'Wrench',
+    description: null,
+    price: 40,
+    categoryId: '2',
+    userId: 2,
+  },
 ];
 
 const categories = [
