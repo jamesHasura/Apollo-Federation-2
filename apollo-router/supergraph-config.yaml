@@ -1,13 +1,13 @@
 federation_version: 2
 subgraphs:
-  locations:
-    routing_url: https://flyby-locations-sub.herokuapp.com/
-    schema:
-      subgraph_url: https://flyby-locations-sub.herokuapp.com/
-  reviews:
-    routing_url: https://flyby-reviews-sub.herokuapp.com/
-    schema:
-      subgraph_url: https://flyby-reviews-sub.herokuapp.com/
+  #locations:
+  #routing_url: https://flyby-locations-sub.herokuapp.com/
+  #schema:
+  #subgraph_url: https://flyby-locations-sub.herokuapp.com/
+  # reviews:
+  #routing_url: https://flyby-reviews-sub.herokuapp.com/
+  #schema:
+  #subgraph_url: https://flyby-reviews-sub.herokuapp.com/
   users:
     routing_url: http://localhost:8080/v1/graphql
     schema:
@@ -16,3 +16,7 @@ subgraphs:
     routing_url: http://localhost:4001/
     schema:
       subgraph_url: http://localhost:4001/
+  reviews:
+    routing_url: http://localhost:4002/
+    schema:
+      subgraph_url: http://localhost:4002/

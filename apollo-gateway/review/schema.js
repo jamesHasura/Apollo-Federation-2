@@ -10,6 +10,10 @@ const typeDefs = gql`
     id: ID!
     rating: Float!
     content: String!
+    users: [user]
+  }
+  type user @key(fields: "id") @shareable {
+    id: Int!
   }
 
   type Product @key(fields: "id") {

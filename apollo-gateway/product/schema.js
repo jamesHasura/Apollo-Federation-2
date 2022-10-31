@@ -12,12 +12,8 @@ const typeDefs = gql`
     description: String
     price: Int!
     category: Category!
-    userId: String!
-    user: user
   }
-  type user @key(fields: "id") {
-    id: Int!
-  }
+
   type Category {
     id: ID!
     title: String!

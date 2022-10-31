@@ -14,14 +14,6 @@ const products = [
     categoryId: '2',
     userId: 1,
   },
-  {
-    id: '2',
-    title: 'Wrench',
-    description: null,
-    price: 40,
-    categoryId: '2',
-    userId: 2,
-  },
 ];
 
 const categories = [
@@ -44,10 +36,6 @@ const resolvers = {
         `resolving product category for product '${JSON.stringify(product)}'`
       );
       return categories.find((category) => category.id === product.categoryId);
-    },
-    user(product) {
-      debug(`resolving product user for product '${JSON.stringify(product)}'`);
-      return { __typename: 'user', id: product.userId };
     },
   },
 };

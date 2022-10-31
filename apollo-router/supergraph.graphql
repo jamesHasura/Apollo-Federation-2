@@ -55,9 +55,8 @@ input Int_comparison_exp
 scalar join__FieldSet
 
 enum join__Graph {
-  LOCATIONS @join__graph(name: "locations", url: "https://flyby-locations-sub.herokuapp.com/")
   PRODUCTS @join__graph(name: "products", url: "http://localhost:4001/")
-  REVIEWS @join__graph(name: "reviews", url: "https://flyby-reviews-sub.herokuapp.com/")
+  REVIEWS @join__graph(name: "reviews", url: "http://localhost:4002/")
   USERS @join__graph(name: "users", url: "http://localhost:8080/v1/graphql")
 }
 
@@ -75,60 +74,22 @@ enum link__Purpose {
   EXECUTION
 }
 
-type Location
-  @join__type(graph: LOCATIONS, key: "id")
-  @join__type(graph: REVIEWS, key: "id")
-{
-  id: ID!
-
-  """The name of the location"""
-  name: String! @join__field(graph: LOCATIONS)
-
-  """A short description about the location"""
-  description: String! @join__field(graph: LOCATIONS)
-
-  """The location's main photo as a URL"""
-  photo: String! @join__field(graph: LOCATIONS)
-
-  """The calculated overall rating based on all reviews"""
-  overallRating: Float @join__field(graph: REVIEWS)
-
-  """All submitted reviews about this location"""
-  reviewsForLocation: [Review]! @join__field(graph: REVIEWS)
-}
-
-input LocationReviewInput
-  @join__type(graph: REVIEWS)
-{
-  """Written text"""
-  comment: String!
-
-  """A number from 1 - 5 with 1 being lowest and 5 being highest"""
-  rating: Int!
-
-  """Location Id"""
-  locationId: String!
-}
-
 """mutation root"""
 type Mutation
-  @join__type(graph: REVIEWS)
   @join__type(graph: USERS)
 {
-  submitReview(locationReview: LocationReviewInput!): SubmitReviewResponse @join__field(graph: REVIEWS)
-
   """
   delete data from the table: "user"
   """
   delete_user(
     """filter the rows which have to be deleted"""
     where: user_bool_exp!
-  ): user_mutation_response @join__field(graph: USERS)
+  ): user_mutation_response
 
   """
   delete single row from the table: "user"
   """
-  delete_user_by_pk(id: Int!): user @join__field(graph: USERS)
+  delete_user_by_pk(id: Int!): user
 
   """
   insert a single row into the table: "user"
@@ -139,7 +100,7 @@ type Mutation
 
     """the row to be inserted"""
     object: user_insert_input!
-  ): user @join__field(graph: USERS)
+  ): user
 
   """
   insert data into the table: "user"
@@ -150,7 +111,7 @@ type Mutation
 
     """the rows to be inserted"""
     objects: [user_insert_input!]!
-  ): user_mutation_response @join__field(graph: USERS)
+  ): user_mutation_response
 
   """
   update data of the table: "user"
@@ -164,7 +125,7 @@ type Mutation
 
     """filter the rows which have to be updated"""
     where: user_bool_exp!
-  ): user_mutation_response @join__field(graph: USERS)
+  ): user_mutation_response
 
   """
   update multiples rows of table: "user"
@@ -172,7 +133,7 @@ type Mutation
   update_user_many(
     """updates to execute, in order"""
     updates: [user_updates!]!
-  ): [user_mutation_response] @join__field(graph: USERS)
+  ): [user_mutation_response]
 
   """
   update single row of the table: "user"
@@ -184,7 +145,7 @@ type Mutation
     """increments the numeric columns with given value of the filtered values"""
     _inc: user_inc_input
     pk_columns: user_pk_columns_input!
-  ): user @join__field(graph: USERS)
+  ): user
 }
 
 """column ordering options"""
@@ -212,33 +173,22 @@ enum order_by
 
 type Product
   @join__type(graph: PRODUCTS, key: "id")
+  @join__type(graph: REVIEWS, key: "id")
 {
   id: ID!
-  title: String!
-  description: String
-  price: Int!
-  category: Category!
-  userId: String!
-  user: user
+  title: String! @join__field(graph: PRODUCTS)
+  description: String @join__field(graph: PRODUCTS)
+  price: Int! @join__field(graph: PRODUCTS)
+  category: Category! @join__field(graph: PRODUCTS)
+  reviews: [Review!]! @join__field(graph: REVIEWS)
 }
 
 type Query
-  @join__type(graph: LOCATIONS)
   @join__type(graph: PRODUCTS)
   @join__type(graph: REVIEWS)
   @join__type(graph: USERS)
 {
-  """
-  The full list of locations presented by the Interplanetary Space Tourism department
-  """
-  locations: [Location!]! @join__field(graph: LOCATIONS)
-
-  """The details of a specific location"""
-  location(id: ID!): Location @join__field(graph: LOCATIONS)
   product(id: ID!): Product @join__field(graph: PRODUCTS)
-
-  """The three latest reviews submitted for FlyBy's locations"""
-  latestReviews: [Review!]! @join__field(graph: REVIEWS)
 
   """
   fetch aggregated fields from the table: "user"
@@ -288,15 +238,9 @@ type Review
   @join__type(graph: REVIEWS)
 {
   id: ID!
-
-  """Written text"""
-  comment: String
-
-  """A number from 1 - 5 with 1 being lowest and 5 being highest"""
-  rating: Int
-
-  """The location the review is about"""
-  location: Location
+  rating: Float!
+  content: String!
+  users: [user]
 }
 
 """
@@ -352,22 +296,6 @@ input String_comparison_exp
 
   """does the column match the given pattern"""
   _like: String
-}
-
-type SubmitReviewResponse
-  @join__type(graph: REVIEWS)
-{
-  """Similar to HTTP status code, represents the status of the mutation"""
-  code: Int!
-
-  """Indicates whether the mutation was successful"""
-  success: Boolean!
-
-  """Human-readable message for the UI"""
-  message: String!
-
-  """Newly created review"""
-  locationReview: Review
 }
 
 type Subscription
@@ -435,11 +363,11 @@ type Subscription
 columns and relationships of "user"
 """
 type user
-  @join__type(graph: PRODUCTS, key: "id")
+  @join__type(graph: REVIEWS, key: "id")
   @join__type(graph: USERS, key: "id")
 {
   id: Int!
-  name: String! @join__field(graph: USERS)
+  name: String @join__field(graph: USERS)
 }
 
 """

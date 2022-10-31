@@ -11,6 +11,14 @@ const reviews = [
     productId: '1',
     content: 'The best blender',
     rating: 4.5,
+    userId: 1,
+  },
+  {
+    id: '2',
+    productId: '1',
+    content: 'The best best blender',
+    rating: 5.0,
+    userId: 2,
   },
 ];
 
@@ -19,6 +27,11 @@ const resolvers = {
     reviews(product) {
       debug(`resolving product reviews by product ${JSON.stringify(product)}`);
       return reviews.filter((review) => review.productId === product.id);
+    },
+  },
+  Review: {
+    users(review) {
+      return [{ __type: 'user', id: review.userId }]; // return the user object)};
     },
   },
 };
